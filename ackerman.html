@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<title>Ackerman</title>
+	
+	<script type="text/javascript">
+
+	const SHOW_CALLS = true;
+
+	const now = () => (new Date().getMilliseconds()) 
+	const timeTaken = ( sT) => ((now() - sT)/1000)
+	const formatAnswer = ( m, n, a, t ) => ('Ackerman(' + m + ',' + n + ') answer: ' + a + ' - time taken: ' + t + ' seconds - ' + (SHOW_CALLS?' no. of times ackerman has been called:'+ ackermanCallCount : ''))
+	
+	var ackermanCallCount = 0;
+
+	function appendParagraph( targetDiv, txt ) {
+
+		let newParagraph = document.createElement('p')
+		
+		let node = document.createTextNode( txt )
+		
+		newParagraph.appendChild( node )
+		
+		let element = document.getElementById( targetDiv )
+		
+		if ( element != null)
+			element.appendChild( newParagraph )
+	}
+
+	function ackerman ( m, n) {
+		
+		ackermanCallCount++;
+		
+		if ( m == 0 )
+			return n+1
+
+		if ( n == 0 )
+			return ackerman( m-1, 1)
+
+		return ackerman( m-1, ackerman(m, n-1))
+	}
+
+	function timerAckerman ( m,n ) {
+
+		let t = now()
+		let answer = '';
+		let bOK = true;
+		ackermanCallCount = 0;
+
+		try{
+
+			answer = ackerman(m,n);
+
+		} catch (err) {
+			
+			answer = 'ERR:'+err.message
+			bOK = false;
+
+		} finally {
+
+			let eT = timeTaken( t );
+			let output = formatAnswer(m,n,answer,eT)
+			appendParagraph( "canvas" ,output )
+	
+		}
+
+		return ( bOK )
+	}
+
+
+	function run (mm, nn) {
+
+		for ( m = 0 ; m<mm; m++){
+		
+			for ( n = 0; n<nn; n++){
+	
+				if ( !timerAckerman( m,n ) ){
+	
+					m=mm
+					n=nn
+				}
+
+			}
+		} 
+	}
+
+
+	</script>
+
+<body>
+	<div id="canvas">
+	</div>
+	<div>
+		<button caption="c" onclick='run(6,6)'>Run Ackerman(6,6)</button>
+	</div>
+
+</body>
+	
+	
+</html>
+
+
